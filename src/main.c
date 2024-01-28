@@ -6,69 +6,51 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-SDL_Window *gWindow = NULL;
-SDL_Surface *gSurface = NULL;
-SDL_Surface *gBmapSurface = NULL;
-
-bool init() {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		return false;
-	}
-
-	gWindow = SDL_CreateWindow("My First Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-
-	if (gWindow == NULL) {
-		return false;
-	}
-
-	gSurface = SDL_GetWindowSurface(gWindow);
-
-	return true;
-}
-
-bool load_assets() {
-	gBmapSurface = SDL_LoadBMP("assets/test-asset.bmp");
-	return gBmapSurface != NULL;
-}
-
-void exit_SDL() {
-	SDL_FreeSurface(gBmapSurface);
-	gBmapSurface = NULL;
-
-	SDL_DestroyWindow(gWindow);
-	gWindow = NULL;
-
-	SDL_Quit();
-}
-
 int main(int argc, char *args[]) {
-	if (!init()) {
-		printf("Failed to initialize! SDL_Error: %s\n", SDL_GetError());
+	SDL_Window *window = SDL_CreateWindow("My First Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	if (window == NULL) {
+		fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
 		return EXIT_FAILURE;
 	}
 
-	if (!load_assets()) {
-		printf("Failed to load assets! SDL_Error: %s\n", SDL_GetError());
-		return EXIT_SUCCESS;
-	}
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    	if (renderer == NULL) {
+        	fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
+        	return EXIT_FAILURE;
+    	}
+	
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderClear(renderer);
 
-	SDL_BlitSurface(gBmapSurface, NULL, gSurface, NULL);
+	SDL_Rect r0 = {50, 50, 75, 75};
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_RenderFillRect(renderer, &r0);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	
+	SDL_RenderPresent(renderer);
 
-	//SDL_FillRect(gSurface, NULL,
-		     //SDL_MapRGB(gSurface->format, 0xff, 0xff, 0xff));
-
-	SDL_UpdateWindowSurface(gWindow);
-
-	SDL_Event e;
-	bool quit = false;
-	while (quit == false) {
+	bool run = true;
+	while (run) {
+		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
-			if (e.type == SDL_QUIT)
-				quit = true;
+			switch (e.type) {
+				case SDL_QUIT:
+					run = false;
+					break;
+				case SDL_KEYDOWN:
+					switch (e.key.keysym.sym) {
+						case SDLK_LEFT:
+							printf("Left was pressed\n");
+							break;
+					}
+					break;
+			}
 		}
 	}
 
-	exit_SDL();
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 
 	return EXIT_SUCCESS;
 }

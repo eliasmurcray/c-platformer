@@ -5,7 +5,7 @@ SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 OBJ_NAME = platformer
 INCLUDE_PATHS = -Iinclude
 LIBRARY_PATHS = -Llib
-COMPILER_FLAGS = -std=c11 -Wall -O0 -g
+COMPILER_FLAGS = -std=c89 -Wall -O0 -g
 LINKER_FLAGS = `pkg-config --cflags --libs sdl2`
 
 all:
