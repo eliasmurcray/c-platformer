@@ -33,3 +33,7 @@ bool square_circle_collide(Square square, Circle circle) {
 	const float closest_y = constrainf(circle.y, square.y - HSIZE, square.y + HSIZE);
 	return distf(closest_x, closest_y, circle.x, circle.y) < HSIZE / 2.f;
 }
+
+bool rect_rect_collide(Rect *r0, Rect *r1) {
+	return r0->x + r0->w > r1->x && r0->x < r1->x + r1->w && r0->y + r0->h > r1->y && r0->y < r1->y + r1->h;
+}

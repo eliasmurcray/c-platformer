@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-void Camera_update(Camera *cam, float px, float py) {
-	cam->x += (px - cam->x) * cam->speed;
-	cam->y += (py - cam->y) * cam->speed;
+void Camera_update(Camera *camera, float px, float py) {
+	camera->x += (px - camera->x) * camera->speed;
+	camera->y += (py - camera->y) * camera->speed;
 }

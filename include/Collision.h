@@ -14,6 +14,13 @@ typedef struct {
 	float y;
 	float w;
 	float h;
+} Rect;
+
+typedef struct {
+	float x;
+	float y;
+	float w;
+	float h;
 } EquilateralTriangle;
 
 typedef struct {
@@ -33,5 +40,7 @@ bool side_side_collide(float v1, float v2, float len);
 bool square_triangle_collide(Square square, EquilateralTriangle triangle);
 
 bool square_circle_collide(Square square, Circle circle);
+
+bool rect_rect_collide(Rect *r0, Rect *r1);
 
 #endif
